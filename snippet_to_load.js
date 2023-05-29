@@ -205,4 +205,4 @@ samples({
 'perc/014.wav',
 'perc/015.wav',
   ]
-}, 'https://github.com/mamalLivecoder/samples/raw/main/hiphop/');
+}, 'github:mamalLivecoder/samples/main/hiphop/');
