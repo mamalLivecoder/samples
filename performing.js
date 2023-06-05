@@ -1,5 +1,5 @@
 samples({
-    808: [
+  808: [
       '808/001.wav',
       '808/002.wav',
       '808/003.wav',
@@ -24,8 +24,8 @@ samples({
       '808/022.wav',
       '808/023.wav',
       '808/024.wav',
-    ],
-    bd: [
+  ],
+  bd: [
       'bd/001.wav',
       'bd/002.wav',
       'bd/003.wav',
@@ -49,8 +49,8 @@ samples({
       'bd/021.wav',
       'bd/022.wav',
       'bd/023.wav',
-    ],
-    cp: [
+  ],
+  cp: [
       'cp/001.wav',
       'cp/002.wav',
       'cp/003.wav',
@@ -73,8 +73,8 @@ samples({
       'cp/020.wav',
       'cp/021.wav',
       'cp/022.wav',
-    ],
-    sd: [
+  ],
+  sd: [
       'sd/001.wav',
       'sd/002.wav',
       'sd/003.wav',
@@ -95,8 +95,8 @@ samples({
       'sd/018.wav',
       'sd/019.wav',
       'sd/020.wav',
-    ],
-    hh: [
+  ],
+  hh: [
       'hh/001.wav',
       'hh/002.wav',
       'hh/003.wav',
@@ -119,8 +119,8 @@ samples({
       'hh/020.wav',
       'hh/021.wav',
       'hh/022.wav',
-    ],
-    oh: [
+  ],
+  oh: [
       'oh/001.wav',
       'oh/002.wav',
       'oh/003.wav',
@@ -145,8 +145,8 @@ samples({
       'oh/022.wav',
       'oh/023.wav',
       'oh/024.wav',
-    ],
-    perc: [
+  ],
+  perc: [
       'perc/001.wav',
       'perc/002.wav',
       'perc/003.wav',
@@ -170,5 +170,48 @@ samples({
       'perc/022.wav',
       'perc/023.wav',
       'perc/024.wav',
-    ]
-  }, 'github:mamalLivecoder/samples/main/808/');
+  ],
+  rim: [
+      'rim/001.wav',
+      'rim/002.wav',
+      'rim/003.wav',
+      'rim/004.wav',
+      'rim/005.wav',
+      'rim/006.wav',
+      'rim/007.wav',
+      'rim/008.wav',
+      'rim/009.wav',
+      'rim/010.wav',
+      'rim/011.wav',
+      'rim/012.wav',
+      'rim/013.wav',
+      'rim/014.wav',
+      'rim/016.wav',
+      'rim/017.wav',
+      'rim/018.wav',
+      'rim/019.wav',
+      'rim/020.wav',
+      'rim/021.wav',
+      'rim/022.wav',
+      'rim/023.wav',
+      'rim/024.wav',
+  ],
+  snap: [
+      'snap/001.wav',
+      'snap/002.wav',
+      'snap/003.wav',
+      'snap/004.wav',
+      'snap/005.wav',
+  ],
+  drum_loop: [
+      'drum_loop/001.wav',
+      'drum_loop/002.wav',
+      'drum_loop/003.wav',
+      'drum_loop/004.wav',
+      'drum_loop/005.wav',
+  ]
+}, 'github:mamalLivecoder/samples/main/808/');
+
+register('withx', (replacement, pat) => pat
+  .fmap(v => v === 'x' ? replacement : v)
+)
