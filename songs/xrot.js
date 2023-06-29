@@ -33,6 +33,12 @@ samples({
 }, 'github:mamalLivecoder/samples/main/808/');
 
 
+let chords = [
+  'e3,g3,b3',
+  'e3,g3,c4',
+  'd3,f#3,b3'
+]
+
 /* INSTRUMETS */
 
 const KICK  = s("bd:2(3,8,<0 2>)");
@@ -41,13 +47,15 @@ const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.55).bp
 const HIHAT = s("[~ hh]*2").gain(.6);
 const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine.range(.1,.5).fast(1.5));
 
-const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").gain(3).adsr(".0:.08:.01:0").color('black').slow(2).chop(5).hpf(300)
+const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").gain(3).adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300)
+
+const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
 
 /* PARTS */
 
 const INTRO = stack(
   CLAP.degradeBy("<.8 .7 .4 .25>/4").jux(rev()).echo(irand(5),.5,.5).sometimes(x=>x.shape(.3)),
-  s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>"),
+  WEIRD_COWBELL,
   s("gong/16").pan(.35),
   s("space/16").late(8).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
 )
@@ -77,7 +85,7 @@ const BRIDGE = stack(
   note("e3 g3 g4 b3 c3 ~".ply(2)).sound("gm_electric_guitar_muted").gain(3).adsr(".0:<.05 .06 .05 .12 .10>:.01:0").color('black').slow(2).hpf(700).room(.35).size(.7),
   s("sd").fast("<0!8 1!4 2!2 4 8>").n(1).gain(.5),
   HIHAT.bpf(400).mask("<0!12 1>")
-  )
+)
 
 const OUTRO = INTRO.rev()
 
@@ -96,5 +104,4 @@ arrange(
 
   [16, OUTRO]
 )
-
 
