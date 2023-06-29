@@ -32,6 +32,8 @@ samples({
   ]
 }, 'github:mamalLivecoder/samples/main/808/');
 
+await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
+
 
 let chords = [
   'e3,g3,b3',
@@ -51,6 +53,8 @@ const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guit
 
 const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
 
+const MELODY = note("<<b4 e4>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("Squine1")
+
 /* PARTS */
 
 const INTRO = stack(
@@ -67,7 +71,9 @@ const PART_A = stack(
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
   
   note("e2").s("808").slow(4),
-  GUITAR.mask("<1@30 0>")
+  GUITAR.mask("<1@30 0>"),
+
+  MELODY.mask("<0 1>/16")
 )
 
 const PART_B = stack(
@@ -104,4 +110,3 @@ arrange(
 
   [16, OUTRO]
 )
-
