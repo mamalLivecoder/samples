@@ -70,6 +70,7 @@ const PART_A = stack(
   CLAP,
   HIHAT,
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
+  s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
   
   note("e2").s("808").slow(4),
   GUITAR.mask("<1@30 0>"),
