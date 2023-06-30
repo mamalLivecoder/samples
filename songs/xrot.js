@@ -52,8 +52,9 @@ const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine
 const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").gain(3).adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300)
 
 const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
+const WEIRD_COWBELL_CUTTED = s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4")
 
-const MELODY = note("<<b4 e4>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("Squine1")
+const MELODY = note("<<b4 e4>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("Squine1").gain(1.4)
 
 /* PARTS */
 
@@ -78,7 +79,8 @@ const PART_A = stack(
 
 const PART_B = stack(
   s("<bd*2!3 bd(3,8)>").mask("<0!12 1!20>").n(1).cut(2),
-  s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4"),
+  WEIRD_COWBELL_CUTTED.mask("<1 0>"),
+  note("<[C#2,e2,a2,b2]>").arp("0 [0,2] 1 [0,2]").s("casio").mask("<0 1>").sometimesBy("<0!4 .1 .2 .3 .6>", x => x.ply("<1!4 2 3 7 7>")).gain(.51).cut(5),
   note("<<e2 f2>(3,8) ~ ~ ~>").s("808").cut(2),
   HIHAT.euclid(5,16),
   KICK.mask("<0!16 1!16>").hpf(100)
