@@ -30,6 +30,8 @@ const SNARE_ROLL = s("sd").fast("<1!2 [1(3,8)]!2 2!2 4 [8 12]>").n(1).gain(1).ro
 const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
 const WEIRD_COWBELL_CUTTED = s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4")
 
+const HORNS = note("[e3,b3,e4,g4]/16").s("gm_french_horn").delay(.21).delayfeedback(.8).delaytime(1/4).adsr("0:.14:0:0").gain(2)
+
 const MELODY = note("<<b4 [g4 a4]>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("<Square>/4").gain(1.4)
 
 /* PARTS */
@@ -48,11 +50,13 @@ const PART_A = stack(
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
   
   note("e2").s("808").slow(4),
-  GUITAR.mask("<1@30 0>").gain(2),
+  GUITAR.mask("<1@30 0>").gain("<2!16 1.35!16>"),
 
   MELODY.mask("<0 1>/16"),
 
-  s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16")
+  s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
+
+  HORNS
 )
 
 const PART_B = stack(
@@ -78,7 +82,7 @@ const BRIDGE = stack(
   s("timpani_roll/4").n(1).cut(1),
   SNARE_ROLL.late(18),
   HIHAT.bpf(400).mask("<0!12 1>"),
-  s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.6).shape(.6).degrade().n("<1 0 2 3>"),
+  s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.6).shape(.6).degrade().n("<1 0 2 3>").sometimesBy(.05, x => x.s("crow")),
   s("didgeridoo").n("<0 1 2 4>").gain(.5).cut(5).speed("<1 2>/4").room(.11)
 )
 
