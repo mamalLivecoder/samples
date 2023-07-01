@@ -1,45 +1,19 @@
-samples({
+await samples({
   808: ['808/001.wav','808/002.wav','808/003.wav',],
   bd: ['bd/001.wav','bd/002.wav','bd/003.wav','bd/004.wav','bd/005.wav',],
-  cp: [
-      'cp/001.wav',
-  ],
-  sd: [
-      'sd/002.wav',
-  ],
-  hh: [
-      'hh/001.wav',
-      'hh/002.wav',
-  ],
-  oh: [
-      'oh/001.wav',
-  ],
-  perc: [
-      'perc/002.wav',
-  ],
-  rim: [
-      'rim/001.wav',
-  ],
-  snap: [
-      'snap/001.wav',
-  ],
-  drum_loop: [
-      'drum_loop/001.wav',
-      'drum_loop/002.wav',
-      'drum_loop/003.wav',
-      'drum_loop/004.wav',
-      'drum_loop/005.wav',
+  cp: ['cp/001.wav',],
+  sd: ['sd/002.wav',],
+  hh: ['hh/001.wav','hh/002.wav',],
+  oh: ['oh/001.wav',],
+  perc: ['perc/002.wav',],
+  rim: ['rim/001.wav',],
+  snap: ['snap/001.wav',],
+  drum_loop: ['drum_loop/001.wav','drum_loop/002.wav','drum_loop/003.wav','drum_loop/004.wav','drum_loop/005.wav',
   ]
 }, 'github:mamalLivecoder/samples/main/808/');
 
 await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
 
-
-let chords = [
-  'e3,g3,b3',
-  'e3,g3,c4',
-  'd3,f#3,b3'
-]
 
 /* INSTRUMETS */
 
@@ -70,12 +44,13 @@ const PART_A = stack(
   CLAP,
   HIHAT,
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
-  s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
   
   note("e2").s("808").slow(4),
   GUITAR.mask("<1@30 0>"),
 
-  MELODY.mask("<0 1>/16")
+  MELODY.mask("<0 1>/16"),
+
+  s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16")
 )
 
 const PART_B = stack(
@@ -83,11 +58,14 @@ const PART_B = stack(
   WEIRD_COWBELL_CUTTED.mask("<1 0>"),
   note("<[C#2,e2,a2,b2]>").arp("0 [0,2] 1 [0,2]").s("casio").mask("<0 1>").sometimesBy("<0!4 .1 .2 .3 .6>", x => x.ply("<1!4 2 3 7 7>")).gain(.51).cut(5),
   note("<<e2 f2>(3,8) ~ ~ ~>").s("808").cut(2),
-  HIHAT.euclid(5,16),
-  KICK.mask("<0!16 1!16>").hpf(100)
+  HIHAT.when("<1!16 0!16>", x=> x.euclid(5,16)),
+  KICK.mask("<0!16 1!16>").hpf(1000),
+  s("east").euclid(5,16).slow(2).pan(rand).n(irand(100)).mask("<0!16 1!16>"),
+  s("gong/16").late(8).pan(.35),
+  s("space/16").late(16).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
 )
 
-const PART_B1 = stack(KICK.n(3), CLAP, HIHAT, PART_B, HIHAT_2)
+const PART_B1 = stack(KICK.n(3).hpf(300), CLAP, HIHAT, PART_B, HIHAT_2)
 
 const BRIDGE = stack(
   note("<e2!2 g2!2>").s("808").slow(4),
@@ -112,4 +90,4 @@ arrange(
   [32, PART_B1],
 
   [16, OUTRO]
-)
+).spiral()
