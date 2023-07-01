@@ -99,7 +99,7 @@ arrange(
   [16, BRIDGE],
   
   [16, stack(PART_A, SNARE_ROLL.zoom(.5,1).late(16))],
-  [32, PART_B1],
+  [32, stack(PART_B1, s("[~ oh]*2").ds(".2:.01"))],
 
   [16, OUTRO]
 )
