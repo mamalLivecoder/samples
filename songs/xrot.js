@@ -23,12 +23,14 @@ const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.55).bp
 const HIHAT = s("[~ hh]*2").gain(.6);
 const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine.range(.1,.5).fast(1.5));
 
-const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").gain(3).adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300)
+const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300).gain(2.5)
+
+const SNARE_ROLL = s("sd").fast("<1!2 [1(3,8)]!2 2!2 4 [8 12]>").n(1).gain(1).room(.15).cut(10).speed("<1!15 [1 .96 .92 .89 .86 .7 .62 .55]>").late(8)
 
 const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
 const WEIRD_COWBELL_CUTTED = s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4")
 
-const MELODY = note("<<b4 e4>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("Squine1").gain(1.4)
+const MELODY = note("<<b4 [g4 a4]>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("<Square>/4").gain(1.4)
 
 /* PARTS */
 
@@ -46,7 +48,7 @@ const PART_A = stack(
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
   
   note("e2").s("808").slow(4),
-  GUITAR.mask("<1@30 0>"),
+  GUITAR.mask("<1@30 0>").gain(2),
 
   MELODY.mask("<0 1>/16"),
 
@@ -55,8 +57,8 @@ const PART_A = stack(
 
 const PART_B = stack(
   s("<bd*2!3 bd(3,8)>").mask("<0!12 1!20>").n(1).cut(2),
-  WEIRD_COWBELL_CUTTED.mask("<1 0>"),
-  note("<[C#2,e2,a2,b2]>").arp("0 [0,2] 1 [0,2]").s("casio").mask("<0 1>").sometimesBy("<0!4 .1 .2 .3 .6>", x => x.ply("<1!4 2 3 7 7>")).gain(.51).cut(5),
+  WEIRD_COWBELL_CUTTED.mask("<1 0>/<1!4 2!5>"),
+  note("<[C#2,e2,a2,b2]>").arp("0 [0,2] 1 [0,2]").s("casio").mask("<0 1>/<1!4 2!5>").sometimesBy("<0!4 .1 .2 .3 .6>", x => x.ply("<1!4 2 3 7 7>")).gain(.48).cut(5),
   note("<<e2 f2>(3,8) ~ ~ ~>").s("808").cut(2),
   HIHAT.when("<1!16 0!16>", x=> x.euclid(5,16)),
   KICK.mask("<0!16 1!16>").hpf(1000),
@@ -65,13 +67,19 @@ const PART_B = stack(
   s("space/16").late(16).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
 )
 
-const PART_B1 = stack(KICK.n(3).hpf(300), CLAP, HIHAT, PART_B, HIHAT_2)
+const PART_B1 = stack(
+  KICK.n(3).hpf(sine.range(500,1200).slow(2.5).segment(16)),
+  CLAP, HIHAT, PART_B.early(16), HIHAT_2
+)
 
 const BRIDGE = stack(
-  note("<e2!2 g2!2>").s("808").slow(4),
-  note("e3 g3 g4 b3 c3 ~".ply(2)).sound("gm_electric_guitar_muted").gain(3).adsr(".0:<.05 .06 .05 .12 .10>:.01:0").color('black').slow(2).hpf(700).room(.35).size(.7),
-  s("sd").fast("<0!8 1!4 2!2 4 8>").n(1).gain(.5),
-  HIHAT.bpf(400).mask("<0!12 1>")
+  WEIRD_COWBELL,
+  WEIRD_COWBELL_CUTTED.degradeBy(.7).bpf(rand.range(100,10000)),
+  s("timpani_roll/4").n(1).cut(1),
+  SNARE_ROLL.late(18),
+  HIHAT.bpf(400).mask("<0!12 1>"),
+  s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.6).shape(.6).degrade().n("<1 0 2 3>"),
+  s("didgeridoo").n("<0 1 2 4>").gain(.5).cut(5).speed("<1 2>/4").room(.11)
 )
 
 const OUTRO = INTRO.rev()
@@ -86,8 +94,8 @@ arrange(
 
   [16, BRIDGE],
   
-  [16, PART_A],
+  [16, stack(PART_A, SNARE_ROLL.zoom(.5,1).late(16))],
   [32, PART_B1],
 
   [16, OUTRO]
-).spiral()
+)
