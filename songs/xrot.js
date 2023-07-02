@@ -17,8 +17,8 @@ await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
 
 /* INSTRUMETS */
 
-const KICK  = s("bd:2(3,8,<0 2>)");
-const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.55).bpf(1000);
+const KICK  = s("bd:2(3,8,<0 2>)").gain(.55);
+const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.35).bpf(1000);
 
 const HIHAT = s("[~ hh]*2").gain(.6);
 const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine.range(.1,.5).fast(1.5));
@@ -66,7 +66,7 @@ const PART_B = stack(
   note("<<e2 f2>(3,8) ~ ~ ~>").s("808").cut(2),
   HIHAT.when("<1!16 0!16>", x=> x.euclid(5,16)),
   KICK.mask("<0!16 1!16>").hpf(1000),
-  s("east").euclid(5,16).slow(2).pan(rand).n(irand(100)).mask("<0!16 1!16>"),
+  s("east").euclid(5,16).slow(2).pan(rand).n(irand(100)).mask("<0!16 1!16>").sometimesBy("<0 0 0 [0 .5]>", ply(4)),
   s("gong/16").late(8).pan(.35),
   s("space/16").late(16).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
 )
@@ -80,7 +80,7 @@ const BRIDGE = stack(
   WEIRD_COWBELL,
   WEIRD_COWBELL_CUTTED.degradeBy(.7).bpf(rand.range(100,10000)),
   s("timpani_roll/4").n(1).cut(1),
-  SNARE_ROLL.late(18),
+  arrange([8, silence], [8, SNARE_ROLL]),
   HIHAT.bpf(400).mask("<0!12 1>"),
   s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.6).shape(.6).degrade().n("<1 0 2 3>").sometimesBy(.05, x => x.s("crow")),
   s("didgeridoo").n("<0 1 2 4>").gain(.5).cut(5).speed("<1 2>/4").room(.11)
@@ -99,7 +99,8 @@ arrange(
   [16, BRIDGE],
   
   [16, stack(PART_A, SNARE_ROLL.zoom(.5,1).late(16))],
-  [32, stack(PART_B1, s("[~ oh]*2").ds(".2:.01"))],
+  [32, stack(PART_B1, s("[~ oh]*2").ds(".2:.01"), s("~ cp:4"))],
 
   [16, OUTRO]
 )
+.theme("<strudelTheme aura>/32")
