@@ -23,6 +23,10 @@ const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.35).bp
 const HIHAT = s("[~ hh]*2").gain(.6);
 const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine.range(.1,.5).fast(1.5));
 
+const OPEN_HAT = s("[~ oh]*2").ds(".2:.01");
+
+const SNARE_CLAP = s("~ cp:4").gain(.51);
+
 const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300).gain(2.5)
 
 const SNARE_ROLL = s("sd").fast("<1!2 [1(3,8)]!2 2!2 4 [8 12]>").n(1).gain(1).room(.15).cut(10).speed("<1!15 [1 .96 .92 .89 .86 .7 .62 .55]>").late(8)
@@ -52,9 +56,13 @@ const PART_A = stack(
   note("e2").s("808").slow(4),
   GUITAR.mask("<1@30 0>").gain("<2!16 1.35!16>"),
 
-  MELODY.mask("<0 1>/16"),
-
   s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
+
+  stack(
+    MELODY,
+    OPEN_HAT,
+    SNARE_CLAP
+  ).mask("<0 1>/16"),
 
   HORNS
 )
@@ -68,7 +76,7 @@ const PART_B = stack(
   KICK.mask("<0!16 1!16>").hpf(1000),
   s("east").euclid(5,16).slow(2).pan(rand).n(irand(100)).mask("<0!16 1!16>").sometimesBy("<0 0 0 [0 .5]>", ply(4)),
   s("gong/16").late(8).pan(.35),
-  s("space/16").late(16).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
+  s("space/16").late(16).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44),
 )
 
 const PART_B1 = stack(
@@ -78,12 +86,13 @@ const PART_B1 = stack(
 
 const BRIDGE = stack(
   WEIRD_COWBELL,
-  WEIRD_COWBELL_CUTTED.degradeBy(.7).bpf(rand.range(100,10000)),
+  WEIRD_COWBELL_CUTTED.degradeBy(.7),
   s("timpani_roll/4").n(1).cut(1),
   arrange([8, silence], [8, SNARE_ROLL]),
   HIHAT.bpf(400).mask("<0!12 1>"),
-  s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.6).shape(.6).degrade().n("<1 0 2 3>").sometimesBy(.05, x => x.s("crow")),
-  s("didgeridoo").n("<0 1 2 4>").gain(.5).cut(5).speed("<1 2>/4").room(.11)
+  s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.36).shape(.6).degrade().n("<1 0 2 3>").sometimesBy(.05, x => x.s("crow")),
+  s("bd(3,8) ~ ~ ~").slow(4),
+  s("gm_breath_noise").loopAt(1).speed("<1 -1>").pan("<.9 .1>").gain(.4)
 )
 
 const OUTRO = INTRO.rev()
@@ -91,7 +100,7 @@ const OUTRO = INTRO.rev()
 /* ARRANGE */
 
 arrange(
-  [16, INTRO],
+  // [16, INTRO],
   
   [32, PART_A],
   [32, PART_B],
@@ -99,8 +108,10 @@ arrange(
   [16, BRIDGE],
   
   [16, stack(PART_A, SNARE_ROLL.zoom(.5,1).late(16))],
-  [32, stack(PART_B1, s("[~ oh]*2").ds(".2:.01"), s("~ cp:4"))],
+  [32, stack(PART_B1, OPEN_HAT, SNARE_CLAP)],
 
   [16, OUTRO]
 )
 .theme("<strudelTheme aura>/32")
+
+BRIDGE
