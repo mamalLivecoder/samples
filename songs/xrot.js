@@ -100,7 +100,7 @@ const OUTRO = INTRO.rev()
 /* ARRANGE */
 
 arrange(
-  // [16, INTRO],
+  [16, INTRO],
   
   [32, PART_A],
   [32, PART_B],
@@ -113,5 +113,3 @@ arrange(
   [16, OUTRO]
 )
 .theme("<strudelTheme aura>/32")
-
-BRIDGE
