@@ -1,3 +1,10 @@
+/*
+@title xrot
+@by Tony Staffu
+@genre: electronica
+@album: the internet music
+*/
+
 await samples({
   808: ['808/001.wav','808/002.wav','808/003.wav',],
   bd: ['bd/001.wav','bd/002.wav','bd/003.wav','bd/004.wav','bd/005.wav',],
@@ -57,11 +64,11 @@ const PART_A = stack(
   GUITAR.mask("<1@30 0>").gain("<2!16 1.35!16>"),
 
   s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
-
+  
   stack(
     MELODY,
     OPEN_HAT,
-    SNARE_CLAP
+    SNARE_CLAP,
   ).mask("<0 1>/16"),
 
   HORNS
