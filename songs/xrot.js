@@ -24,34 +24,37 @@ await loadOrc('github:kunstmusik/csound-live-code/master/livecode.orc')
 
 /* INSTRUMETS */
 
+// DRUMS
 const KICK  = s("bd:2(3,8,<0 2>)").gain(.55);
 const CLAP  = s("cp(5,16)").slow("2").room(0.1).size(.6).clip(0.25).gain(.35).bpf(1000);
-
+const SNARE_CLAP = s("~ cp:4").gain(.51);
 const HIHAT = s("[~ hh]*2").gain(.6);
 const HIHAT_2 = s("hh:1*8").gain(.35).pan(sine.range(.48,.53).slow(3)).gain(sine.range(.1,.5).fast(1.5));
-
 const OPEN_HAT = s("[~ oh]*2").ds(".2:.01");
+const SNARE_ROLL = s("sd").fast("<1!2 [1(3,8)]!2 2!2 4 [8 12]>").n(1).gain(1).room(.15).cut(10).speed("<1!15 [1 .96 .92 .89 .86 .7 .62 .55]>").late(8),
+      BASS_808 = note("e2").s("808").slow(4);
 
-const SNARE_CLAP = s("~ cp:4").gain(.51);
-
+// instruments
 const GUITAR = note("~ [e3,<g3!16 g4!16>,<b3!12 c3!4>]").sound("gm_electric_guitar_muted").adsr(".0:.08:.01:0").slow(2).chop(5).hpf(300).gain(2.5)
-
-const SNARE_ROLL = s("sd").fast("<1!2 [1(3,8)]!2 2!2 4 [8 12]>").n(1).gain(1).room(.15).cut(10).speed("<1!15 [1 .96 .92 .89 .86 .7 .62 .55]>").late(8)
-
-const WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>")
-const WEIRD_COWBELL_CUTTED = s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4")
-
 const HORNS = note("[e3,b3,e4,g4]/16").s("gm_french_horn").delay(.21).delayfeedback(.8).delaytime(1/4).adsr("0:.14:0:0").gain(2)
-
 const MELODY = note("<<b4 [g4 a4]>(3,8) <[e4 f#4 g4 b4]!3 [[~ a4] b4 c4 g5]>>").csound("<Square>/4").gain(1.4)
+
+//SFX
+const BREATH = s("gm_breath_noise").loopAt(1).speed("<1 -1>").pan("<.9 .1>").gain(.4),
+      WEIRD_COWBELL = s("perc*2").gain("<.1 .2 .3 .32>/4").speed("-1").pan("<0 1>"),
+      WEIRD_COWBELL_CUTTED = s("perc*8").speed("1 .99 .98 .97").cut(1).gain(rand).degradeBy(.6).chop("<1 2 1 4>/4"),
+      GONG = s("gong/16").pan(.35),
+      WEIRD_SOUND_1 = s("space/16").late(8).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
+  ;
 
 /* PARTS */
 
 const INTRO = stack(
   CLAP.degradeBy("<.8 .7 .4 .25>/4").jux(rev()).echo(irand(5),.5,.5).sometimes(x=>x.shape(.3)),
   WEIRD_COWBELL,
-  s("gong/16").pan(.35),
-  s("space/16").late(8).echoWith(4, 1/4, (p,n) => p.speed(1 + n*.4)).delay(.33).gain(.44)
+  GONG,
+  WEIRD_SOUND_1,
+  BREATH
 )
 
 const PART_A = stack(
@@ -59,8 +62,9 @@ const PART_A = stack(
   CLAP,
   HIHAT,
   HIHAT_2.mask("<0 1>/16").mask("<1@30 0>"),
+
+  BASS_808,
   
-  note("e2").s("808").slow(4),
   GUITAR.mask("<1@30 0>").gain("<2!16 1.35!16>"),
 
   s("drum_loop:2").loopAt(8).chop(8).iter(4).cut(8).pan(.7).gain("<.31 .15>/16"),
@@ -88,7 +92,10 @@ const PART_B = stack(
 
 const PART_B1 = stack(
   KICK.n(3).hpf(sine.range(500,1200).slow(2.5).segment(16)),
-  CLAP, HIHAT, PART_B.early(16), HIHAT_2
+  CLAP,
+  HIHAT,
+  PART_B.early(16),
+  HIHAT_2
 )
 
 const BRIDGE = stack(
@@ -99,7 +106,7 @@ const BRIDGE = stack(
   HIHAT.bpf(400).mask("<0!12 1>"),
   s("insect(7,8)").pan(perlin.range(0,1)).cut(7).gain(.36).shape(.6).degrade().n("<1 0 2 3>").sometimesBy(.05, x => x.s("crow")),
   s("bd(3,8) ~ ~ ~").slow(4),
-  s("gm_breath_noise").loopAt(1).speed("<1 -1>").pan("<.9 .1>").gain(.4)
+  BREATH,
 )
 
 const OUTRO = INTRO.rev()
@@ -117,6 +124,8 @@ arrange(
   [16, stack(PART_A, SNARE_ROLL.zoom(.5,1).late(16))],
   [32, stack(PART_B1, OPEN_HAT, SNARE_CLAP)],
 
-  [16, OUTRO]
+  [16, OUTRO],
+
+  [10000000, silence]
 )
 .theme("<strudelTheme aura>/32")
