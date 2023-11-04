@@ -464,5 +464,8 @@
         "trap/snap/003.wav",
         "trap/snap/004.wav",
         "trap/snap/005.wav"
-    ]
+    ],
+    "loops_loop": [
+        "loops/piano_loop1.wav"
+    ] 
 }
